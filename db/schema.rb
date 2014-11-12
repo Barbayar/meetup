@@ -14,8 +14,19 @@
 ActiveRecord::Schema.define(version: 20141112074146) do
 
   create_table "users", force: true do |t|
+    t.integer "sid"
+    t.integer "uid"
+    t.string "name"
+    t.string "email"
+    t.string "avatar_url"
     t.datetime "created_at"
-    t.datetime "updated_at"
   end
+
+  change_column_null :users, :sid, false
+  change_column_null :users, :uid, false
+  change_column_null :users, :name, false
+  change_column_null :users, :avatar_url, false
+  change_column_null :users, :created_at, false
+  add_index :users, [:sid, :uid], unique: true
 
 end
