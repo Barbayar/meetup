@@ -1,5 +1,5 @@
 class GroupController < ApplicationController
-  before_action :check_authorization, only: [:get, :post, :put, :delete]
+  before_action :check_authorization, only: [:post, :put, :delete]
   before_action :check_permission, only: [:put, :delete]
   before_action :set_group, only: [:get, :put, :delete]
 
