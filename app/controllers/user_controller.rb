@@ -6,7 +6,7 @@ class UserController < ApplicationController
 
   def signin
     credential = request.env['omniauth.auth']
-    user = {
+    new_user = {
       :sid => AUTH_SERVICES[credential[:provider]],
       :uid => credential[:uid].to_i,
       :name => credential[:info][:name],
@@ -14,28 +14,22 @@ class UserController < ApplicationController
       :avatar_url => credential[:info][:image],
     }
 
-    found = User.find_by(sid: user[:sid], uid: user[:uid])
+    user = User.find_by(sid: new_user[:sid], uid: new_user[:uid])
 
-    if found.nil?
+    if user.nil?
       logger.info 'creating user...'
-      User.create(user)
+      user = User.create(new_user)
     else
       logger.info 'updating user...'
-      found.update(user)
+      user.update(new_user)
     end
 
-    session[:me] = user
-
-    respond_to do |format|
-      format.any { render nothing: true }
-    end
+    session[:me] = user.attributes
+    render nothing: true
   end
 
   def signout
     session[:me] = nil
-
-    respond_to do |format|
-      format.any { render nothing: true }
-    end
+    render nothing: true
   end
 end
