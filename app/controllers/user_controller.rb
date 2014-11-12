@@ -14,7 +14,16 @@ class UserController < ApplicationController
       :avatar_url => credential[:info][:image],
     }
 
-    User.create(user) if User.find_by(sid: user[:sid], uid: user[:uid]).nil?
+    found = User.find_by(sid: user[:sid], uid: user[:uid])
+
+    if found.nil?
+      logger.info 'creating user...'
+      User.create(user)
+    else
+      logger.info 'updating user...'
+      found.update(user)
+    end
+
     session[:me] = user
 
     respond_to do |format|

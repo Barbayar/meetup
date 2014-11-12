@@ -11,22 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141112074146) do
+ActiveRecord::Schema.define(version: 20141112124648) do
 
-  create_table "users", force: true do |t|
-    t.integer "sid"
-    t.integer "uid"
-    t.string "name"
-    t.string "email"
-    t.string "avatar_url"
-    t.datetime "created_at"
+  create_table "groups", force: true do |t|
+    t.integer  "user_id",     null: false
+    t.string   "name",        null: false
+    t.text     "description", null: false
+    t.datetime "created_at",  null: false
   end
 
-  change_column_null :users, :sid, false
-  change_column_null :users, :uid, false
-  change_column_null :users, :name, false
-  change_column_null :users, :avatar_url, false
-  change_column_null :users, :created_at, false
-  add_index :users, [:sid, :uid], unique: true
+  add_index "groups", ["user_id"], name: "index_groups_on_owner_id"
+
+  create_table "users", force: true do |t|
+    t.integer  "sid",        null: false
+    t.integer  "uid",        null: false
+    t.string   "name",       null: false
+    t.string   "email"
+    t.string   "avatar_url", null: false
+    t.datetime "created_at", null: false
+  end
+
+  add_index "users", ["sid", "uid"], name: "index_users_on_sid_and_uid", unique: true
 
 end
