@@ -8,7 +8,7 @@ class GroupController < ApplicationController
   end
 
   def post
-    params[:group][:user_id] = session[:me]["id"]
+    params[:group][:user_id] = session[:me]
     group = Group.create(params.require(:group).permit([:user_id, :name, :description]))
 
     if !group.id.nil?
@@ -30,13 +30,9 @@ class GroupController < ApplicationController
 
   private
 
-  def check_authorization
-    render nothing: true, status: :unauthorized if session[:me].nil?
-  end
-
   def check_permission
     group = Group.find(params[:id])
-    render nothing: true, status: :forbidden if group.user_id != session[:me]["id"]
+    render nothing: true, status: :forbidden if group.user_id != session[:me]
   end
 
   def set_group

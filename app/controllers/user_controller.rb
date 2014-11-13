@@ -24,7 +24,7 @@ class UserController < ApplicationController
       user.update(new_user)
     end
 
-    session[:me] = user.attributes
+    session[:me] = user.id
     render nothing: true
   end
 
